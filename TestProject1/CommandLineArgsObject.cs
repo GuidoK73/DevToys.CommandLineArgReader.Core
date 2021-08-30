@@ -10,7 +10,7 @@ namespace TestProject1
     }
 
     [DefaultProperty("FileName")]
-    [Description("Filename commandline argument is mandatory, other settings can be set by using App.config as well.")]
+    [Description("Filename commandline argument is mandatory. Bla Bla")]
     public class CommandLineArgsObject
     {
         [Description("Target database name")]
