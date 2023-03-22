@@ -14,16 +14,16 @@ namespace DevToys.Core
     /// <typeparam name="COMMANDLINEARGUMENTS">Object containing argument properties.</typeparam>
     public class CommandLineArgReader<COMMANDLINEARGUMENTS> where COMMANDLINEARGUMENTS : class, new()
     {
-        private Dictionary<string, PropertyInfo> _Properties = new Dictionary<string, PropertyInfo>();
-        private Dictionary<string, bool> _RequiredPropertiesSet = new Dictionary<string, bool>();
-        private Dictionary<string, string> _AltKeys = new Dictionary<string, string>();
-        private Dictionary<string, string> _AllKeys = new Dictionary<string, string>();
-        private List<Argument> _Arguments = new List<Argument>();
-        private HashSet<string> _Hidden = new HashSet<string>();
+        private readonly Dictionary<string, PropertyInfo> _Properties = new();
+        private Dictionary<string, bool> _RequiredPropertiesSet = new();
+        private readonly Dictionary<string, string> _AltKeys = new();
+        private readonly Dictionary<string, string> _AllKeys = new();
+        private List<Argument> _Arguments = new();
+        private readonly HashSet<string> _Hidden = new();
         private PropertyInfo _DefaultProperty;
-        private StringBuilder _SbErrorText = new StringBuilder();
+        private readonly StringBuilder _SbErrorText = new();
         private const string _DefaultCharValue = "";
-        private string[] _Args;
+        private readonly string[] _Args;
         private string _helpText = string.Empty;
 
         private class Argument
@@ -35,12 +35,24 @@ namespace DevToys.Core
 
         public bool HelpRequested { get; private set; }
 
-        public bool NoArgs => (_Args == null || _Args.Length == 0) ? true : false;
+        public bool NoArgs => (_Args == null || _Args.Length == 0);
 
         public static object Convert(object value, Type target)
         {
             target = Nullable.GetUnderlyingType(target) ?? target;
-            return (target.IsEnum) ? Enum.Parse(target, value.ToString()) : System.Convert.ChangeType(value, target);
+            return (target.IsEnum) ? Enum.Parse(target, value.ToString()) : ChangeType(value, target);
+        }
+
+        private static object ChangeType(object value, Type target)
+        {
+            if (target.IsArray && value.GetType().IsArray == false)
+            {
+                string[] _array = new string[] { value.ToString() };
+                return System.Convert.ChangeType(_array, target);
+            }
+            else
+                return System.Convert.ChangeType(value, target);
+
         }
 
         public CommandLineArgReader(string[] args)
@@ -68,7 +80,7 @@ namespace DevToys.Core
             foreach (var key in _hidden)
                 _Hidden.Add(key);
 
-            var _defaultAttribute = _type.GetCustomAttribute(typeof(DefaultPropertyAttribute)) as DefaultPropertyAttribute;
+            DefaultPropertyAttribute _defaultAttribute = _type.GetCustomAttribute(typeof(DefaultPropertyAttribute)) as DefaultPropertyAttribute;
             if (_defaultAttribute != null)
                 _DefaultProperty = _type.GetProperty(_defaultAttribute.Name);
 
@@ -238,7 +250,7 @@ namespace DevToys.Core
                     _defaultName = _DefaultProperty.Name;
 
                 if (!string.IsNullOrWhiteSpace(_errorText))
-                    _sb.Append(_SbErrorText.ToString()).Append("\r\n");
+                    _sb.Append(_SbErrorText).Append("\r\n");
 
                 _sb.Append($"Usage:\r\n\r\n");
 
@@ -255,7 +267,7 @@ namespace DevToys.Core
                     else if (x.Value.PropertyType.IsArray)
                         _sb.Append($"[PARAM] [PARAM] [PARAM] etc. ");
                     else if (x.Value.PropertyType == typeof(bool))
-                        _sb.Append($" ");
+                        _sb.Append(' ');
                     else
                         _sb.Append($"[{x.Value.Name}] ");
 
@@ -264,7 +276,7 @@ namespace DevToys.Core
                     _sb.Append((x.Value.PropertyType.IsArray) ? $"(Array, any following parameter not a keyword is assumed to be an array element.)" : "");
                     _sb.Append($"\r\n");
 
-                    var _attribute = x.Value.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute;
+                    DescriptionAttribute _attribute = x.Value.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute;
                     if (_attribute != null)
                         _sb.Append($"{_attribute.Description}\r\n");
 

@@ -41,5 +41,11 @@ namespace TestProject1
         [Description("Enum Test")]
         [DataMember(Name = "/fastmode")]
         public EnumTest FastMode { get; set; }
+
+
+        [Description("Enum array Test")]
+        [DataMember(Name = "/enums")]
+        public EnumTest[] Enums { get; set; }
+
     }
 }

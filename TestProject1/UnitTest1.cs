@@ -1,12 +1,29 @@
 using DevToys.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Text.RegularExpressions;
 
 namespace TestProject1
 {
     [TestClass]
     public class UnitTest1
     {
+
+        [TestMethod]
+        public void TestMethodRegex()
+        {
+            Regex _regexVarchar = new Regex("varchar\\(\\d+\\)");
+
+            string _test = "nvarchar(126)";
+
+            bool _result = _regexVarchar.IsMatch(_test);
+
+            Console.Write("X");
+
+        }
+
+
+
         [TestMethod]
         public void TestMethod1()
         {
@@ -27,6 +44,29 @@ namespace TestProject1
             Assert.AreEqual("\"file1\"", _commandLineArgsObject.FileNames[0]);
             Assert.AreEqual("\"file2\"", _commandLineArgsObject.FileNames[1]);
             Assert.AreEqual("\"file3\"", _commandLineArgsObject.FileNames[2]);
+            Assert.AreEqual(EnumTest.On, _commandLineArgsObject.FastMode);
+            Assert.AreEqual(256, _commandLineArgsObject.BufferSize);
+        }
+
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            string _argumentString = "/silent /server Server1001 /db MyDataBase /files \"file1\" /enums On /fastmode On /buffersize 256";
+            string[] _args = _argumentString.Split(" ");
+
+            var _commandLineArgReader = new CommandLineArgReader<CommandLineArgsObject>(_args); // Build reader for args
+            var _commandLineArgsObject = _commandLineArgReader.GetObject(); // translate the args into the desired object.
+            if (_commandLineArgReader.HelpRequested || _commandLineArgReader.NoArgs)
+            {
+                Console.WriteLine(_commandLineArgReader.Help); // check for /? and show help if requested.
+                return;
+            }
+
+            Assert.AreEqual(true, _commandLineArgsObject.Silent);
+            Assert.AreEqual("Server1001", _commandLineArgsObject.Server);
+            Assert.AreEqual("MyDataBase", _commandLineArgsObject.DataBase);
+            Assert.AreEqual("\"file1\"", _commandLineArgsObject.FileNames[0]);
             Assert.AreEqual(EnumTest.On, _commandLineArgsObject.FastMode);
             Assert.AreEqual(256, _commandLineArgsObject.BufferSize);
         }

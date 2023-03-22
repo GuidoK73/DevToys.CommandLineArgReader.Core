@@ -1,16 +1,32 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Authors>Guidok73</Authors>
     <Company>.</Company>
     <PackageProjectUrl>https://github.com/GuidoK73/DevToys.CommandLineArgReader.Core</PackageProjectUrl>
-    <Description>Easy Command Line Arguments
-
-See Help.txt in Git repository.</Description>
+    <Description>Easy Command Line Arguments</Description>
     <RepositoryUrl>https://github.com/GuidoK73/DevToys.CommandLineArgReader.Core</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageReadmeFile>Readme.md</PackageReadmeFile>
+    <Title>DevToys.CommandLineArgReader.Core</Title>
+    <Version>1.0.1</Version>
+    <PackageLicenseFile>GPL.txt</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\CodeLibrary\CodeLibrary\GPL.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
